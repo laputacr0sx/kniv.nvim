@@ -1,5 +1,25 @@
 return {
   {
+    'norcalli/nvim-colorizer.lua',
+    config = function()
+      require('colorizer').setup()
+    end,
+  },
+
+  {
+    'loctvl842/monokai-pro.nvim',
+    lazy = false,
+    priority = 1000,
+    config = function()
+      require('monokai-pro').setup()
+      -- Load the colorscheme here
+      vim.cmd.colorscheme 'monokai-pro-spectrum'
+      -- You can configure highlights by doing something like
+      vim.cmd.hi 'Comment gui=none'
+    end,
+  },
+
+  {
     'nvim-lualine/lualine.nvim',
     dependencies = { 'nvim-tree/nvim-web-devicons' },
     config = function()

@@ -1,5 +1,7 @@
 require('lazy').setup({
-  require 'kniv.plugins.lualine',
+  -- require 'kniv.plugins.lualine',
+
+  require 'kniv.plugins.appearance',
 
   require 'kniv.plugins.naked_plugins',
 
@@ -7,12 +9,7 @@ require('lazy').setup({
 
   require 'kniv.plugins.tabnine',
 
-  {
-    'norcalli/nvim-colorizer.lua',
-    config = function()
-      require('colorizer').setup()
-    end,
-  },
+  require 'kniv.plugins.gitsigns',
 
   -- NvimTree Custom Configuration
   {
@@ -39,9 +36,6 @@ require('lazy').setup({
       }
     end,
   },
-
-  -- Gitsigns
-  require 'kniv.plugins.gitsigns',
 
   { -- Useful plugin to show you pending keybinds.
     'folke/which-key.nvim',
@@ -132,13 +126,11 @@ require('lazy').setup({
   { -- LSP Configuration & Plugins
     'neovim/nvim-lspconfig',
     dependencies = {
-      -- Automatically install LSPs and related tools to stdpath for neovim
+
       'williamboman/mason.nvim',
       'williamboman/mason-lspconfig.nvim',
       'WhoIsSethDaniel/mason-tool-installer.nvim',
 
-      -- Useful status updates for LSP.
-      -- NOTE: `opts = {}` is the same as calling `require('fidget').setup({})`
       { 'j-hui/fidget.nvim', opts = {} },
     },
     config = function()
@@ -384,19 +376,6 @@ require('lazy').setup({
           { name = 'path' },
         },
       }
-    end,
-  },
-  {
-    'loctvl842/monokai-pro.nvim',
-    lazy = false,
-    priority = 1000,
-    config = function()
-      require('monokai-pro').setup()
-      -- Load the colorscheme here
-      vim.cmd.colorscheme 'monokai-pro-spectrum'
-
-      -- You can configure highlights by doing something like
-      vim.cmd.hi 'Comment gui=none'
     end,
   },
   { -- Collection of various small independent plugins/modules
