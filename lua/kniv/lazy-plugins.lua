@@ -1,6 +1,4 @@
 require('lazy').setup({
-  -- require 'kniv.plugins.lualine',
-
   require 'kniv.plugins.appearance',
 
   require 'kniv.plugins.naked_plugins',
@@ -126,6 +124,8 @@ require('lazy').setup({
   { -- LSP Configuration & Plugins
     'neovim/nvim-lspconfig',
     dependencies = {
+      'jose-elias-alvarez/null-ls.nvim',
+      'MunifTanjim/prettier.nvim',
 
       'williamboman/mason.nvim',
       'williamboman/mason-lspconfig.nvim',
@@ -144,7 +144,6 @@ require('lazy').setup({
           local builtin = require 'telescope.builtin'
 
           -- Jump to the definition of the word under your cursor.
-          --  This is where a variable was first declared, or where a function is defined, etc.
           --  To jump back, press <C-T>.
           map('gd', require('telescope.builtin').lsp_definitions, '[G]oto [D]efinition')
 
@@ -222,13 +221,23 @@ require('lazy').setup({
         pyright = {},
         -- rust_analyzer = {},
         -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
-        --
-        -- Some languages (like typescript) have entire language plugins that can be useful:
-        --    https://github.com/pmizio/typescript-tools.nvim
-        --
         -- But for many setups, the LSP (`tsserver`) will work just fine
-        tsserver = {},
-        --
+        tsserver = {
+          init_options = {
+            plugins = {
+              {
+                name = '@vue/typescript-plugin',
+                location = '/usr/local/lib/node_modules/@vue/typescript-plugin',
+                languages = { 'javascript', 'typescript', 'vue' },
+              },
+            },
+          },
+          filetypes = {
+            'javascript',
+            'typescript',
+            'vue',
+          },
+        },
 
         lua_ls = {
           cmd = {},
@@ -249,7 +258,6 @@ require('lazy').setup({
               completion = {
                 callSnippet = 'Replace',
               },
-              -- You can toggle below to ignore Lua_LS's noisy `missing-fields` warnings
               -- diagnostics = { disable = { 'missing-fields' } },
             },
           },
@@ -262,7 +270,6 @@ require('lazy').setup({
         'stylua', -- Used to format lua code
       })
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
-
       require('mason-lspconfig').setup {
         handlers = {
           function(server_name)
@@ -415,6 +422,78 @@ require('lazy').setup({
     end,
   },
 
+  {
+    'jose-elias-alvarez/null-ls.nvim',
+    config = function()
+      local null_ls = require 'null-ls'
+      local group = vim.api.nvim_create_augroup('lsp_format_on_save', { clear = false })
+      local event = 'BufWritePre' -- or "BufWritePost"
+      local async = event == 'BufWritePost'
+
+      null_ls.setup {
+        on_attach = function(client, bufnr)
+          if client.supports_method 'textDocument/formatting' then
+            vim.keymap.set('n', '<Leader>f', function()
+              vim.lsp.buf.format { bufnr = vim.api.nvim_get_current_buf() }
+            end, { buffer = bufnr, desc = '[lsp] format' })
+
+            -- format on save
+            vim.api.nvim_clear_autocmds { buffer = bufnr, group = group }
+            vim.api.nvim_create_autocmd(event, {
+              buffer = bufnr,
+              group = group,
+              callback = function()
+                vim.lsp.buf.format { bufnr = bufnr, async = async }
+              end,
+              desc = '[lsp] format on save',
+            })
+          end
+
+          if client.supports_method 'textDocument/rangeFormatting' then
+            vim.keymap.set('x', '<Leader>f', function()
+              vim.lsp.buf.format { bufnr = vim.api.nvim_get_current_buf() }
+            end, { buffer = bufnr, desc = '[lsp] format' })
+          end
+        end,
+      }
+    end,
+  },
+  {
+    'MunifTanjim/prettier.nvim',
+    config = function()
+      local prettier = require 'prettier'
+
+      prettier.setup {
+        ['null-ls'] = {
+          condition = function()
+            return prettier.config_exists {
+              check_package_json = true,
+            }
+          end,
+          runtime_condition = function(params)
+            return true
+          end,
+          timeout = 5000,
+        },
+        bin = 'prettier', -- or `'prettierd'` (v0.23.3+)
+        filetypes = {
+          'lua',
+          'css',
+          'graphql',
+          'html',
+          'javascript',
+          'javascriptreact',
+          'json',
+          'less',
+          'markdown',
+          'scss',
+          'typescript',
+          'typescriptreact',
+          'yaml',
+        },
+      }
+    end,
+  },
   { -- Highlight, edit, and navigate code
     'nvim-treesitter/nvim-treesitter',
     build = ':TSUpdate',
