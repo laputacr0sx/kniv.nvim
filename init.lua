@@ -1,6 +1,9 @@
 -- Set VIM global setting options
 require 'kniv.options'
 
+--Set NVIM diagnostics
+require 'kniv.diagnostics'
+
 -- [[ Install `lazy.nvim` plugin manager ]]
 --    See `:help lazy.nvim.txt` or https://github.com/folke/lazy.nvim for more info
 local lazypath = vim.fn.stdpath 'data' .. '/lazy/lazy.nvim'
