@@ -1,55 +1,13 @@
 require('lazy').setup({
   require 'kniv.plugins.appearance',
-
   require 'kniv.plugins.naked_plugins',
-
   require 'kniv.plugins.note-highlight',
-
   require 'kniv.plugins.tabnine',
-
   require 'kniv.plugins.gitsigns',
-
   require 'kniv.plugins.ufo',
-
-  { -- NvimTree Custom Configuration
-    'nvim-tree/nvim-tree.lua',
-    version = '*',
-    lazy = false,
-    dependencies = {
-      'nvim-tree/nvim-web-devicons',
-    },
-    config = function()
-      require('nvim-tree').setup {
-        sort = {
-          sorter = 'case_sensitive',
-        },
-        view = {
-          width = 30,
-        },
-        renderer = {
-          group_empty = true,
-        },
-        filters = {
-          dotfiles = true,
-        },
-      }
-    end,
-  },
-
-  { -- Useful plugin to show you pending keybinds.
-    'folke/which-key.nvim',
-    event = 'VimEnter', -- Sets the loading event to 'VimEnter'
-    config = function() -- This is the function that runs, AFTER loading
-      require('which-key').setup()
-      require('which-key').register {
-        ['<leader>c'] = { name = '[C]ode', _ = 'which_key_ignore' },
-        ['<leader>d'] = { name = '[D]ocument', _ = 'which_key_ignore' },
-        ['<leader>r'] = { name = '[R]ename', _ = 'which_key_ignore' },
-        ['<leader>s'] = { name = '[S]earch', _ = 'which_key_ignore' },
-        ['<leader>w'] = { name = '[W]orkspace', _ = 'which_key_ignore' },
-      }
-    end,
-  },
+  require 'kniv.plugins.indent-line',
+  require 'kniv.plugins.which_key',
+  require 'kniv.plugins.nvim_tree',
 
   { -- Fuzzy Finder (files, lsp, etc)
     'nvim-telescope/telescope.nvim',
@@ -206,10 +164,10 @@ require('lazy').setup({
       --  - capabilities (table): Override fields in capabilities. Can be used to disable certain LSP features.
       --  - settings (table): Override the default settings passed when initializing the server.
       local servers = {
-        -- clangd = {},
-        -- gopls = {},
+        clangd = {},
+        gopls = {},
         pyright = {},
-        -- rust_analyzer = {},
+        rust_analyzer = {},
         tsserver = {
           filetypes = { 'typescript', 'typescriptreact', 'typescript.tsx' },
           cmd = { 'typescript-language-server', '--stdio' },
@@ -260,12 +218,9 @@ require('lazy').setup({
         lsp_fallback = true,
       },
       formatters_by_ft = {
+        go = { 'gopls' },
         lua = { 'stylua' },
-        -- Conform can also run multiple formatters sequentially
         python = { 'isort', 'black' },
-        --
-        -- You can use a sub-list to tell conform to run *until* a formatter
-        -- is found.
         javascript = { { 'prettierd', 'prettier' } },
       },
     },
@@ -443,6 +398,7 @@ require('lazy').setup({
         },
         bin = 'prettier', -- or `'prettierd'` (v0.23.3+)
         filetypes = {
+          'go',
           'lua',
           'css',
           'graphql',
