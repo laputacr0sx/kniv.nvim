@@ -15,7 +15,7 @@ return {
       -- Load the colorscheme here
       vim.cmd.colorscheme 'monokai-pro-spectrum'
       -- You can configure highlights by doing something like
-      vim.cmd.hi 'Comment gui=none'
+      -- vim.cmd.hi 'Comment gui=none'
     end,
   },
 
