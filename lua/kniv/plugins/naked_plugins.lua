@@ -2,7 +2,10 @@ return {
   {
     'tpope/vim-sleuth', -- Detect tabstop and shiftwidth automatically
 
-    'tpope/vim-commentary', -- Comment out a line
+    {
+      'tpope/vim-commentary',
+      config = function() end,
+    }, -- Comment out a line }
 
     'theprimeagen/harpoon', -- File navigation
 

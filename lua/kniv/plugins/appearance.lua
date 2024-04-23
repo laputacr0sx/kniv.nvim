@@ -12,10 +12,7 @@ return {
     priority = 1000,
     config = function()
       require('monokai-pro').setup()
-      -- Load the colorscheme here
-      vim.cmd.colorscheme 'monokai-pro-spectrum'
-      -- You can configure highlights by doing something like
-      -- vim.cmd.hi 'Comment gui=none'
+      vim.cmd.colorscheme 'monokai-pro-ristretto'
     end,
   },
 
@@ -53,11 +50,10 @@ return {
           },
           lualine_x = {
             { 'diagnostics', sources = { 'nvim_diagnostic' }, symbols = { error = ' ', warn = ' ', info = ' ', hint = ' ' } },
-            'encoding',
             'filetype',
           },
 
-          lualine_y = { 'progress', 'location' },
+          lualine_y = { 'location' },
           lualine_z = { 'lsp_progress', 'tabnine' },
         },
         inactive_sections = {

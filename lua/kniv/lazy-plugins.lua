@@ -7,6 +7,7 @@ require('lazy').setup({
   require 'kniv.plugins.ufo',
   require 'kniv.plugins.which_key',
   require 'kniv.plugins.nvim_tree',
+  require 'kniv.plugins.noice',
 
   { -- Fuzzy Finder (files, lsp, etc)
     'nvim-telescope/telescope.nvim',
